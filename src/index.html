@@ -1,0 +1,64 @@
+<!-- Use 'v-scope' to show where Vue petite is going to be used on the page
+    v-scope can be left empty, simply serves as a hint for petite-vue to
+    process this element
+-->
+
+<html>
+    <head>
+        <title>Petite Vue Multi-Step Form</title>
+        <script type="module" src="app.js"></script>
+        <link href="/dist/output.css" rel="stylesheet">
+
+    </head>
+    <body class="w-full h-screen flex flex-col py-8 space-y-8 items-center bg-blue-200">
+        
+        <!--- Changed Content --->
+        <div id="multi-step-form">
+            <form class="p-10" @submit.prevent="">
+                <!-- Step Indicators -->
+                <div class="flex items-stretch gap-2">
+                    
+                    <div 
+                        class="h-2 w-full rounded text-purple-500 border border-black"
+                        v-for="step in totalSteps"
+                        :class="{'bg-purple-500': step - 1 <= currentStep}"
+                    >
+
+                    </div>
+                </div>
+    
+                <div v-for="(fieldKeys, step) in steps">
+                    <div v-if="currentStep === step" class="">
+                        <div v-for="field in fieldKeys" class="relative">
+                            <div class="form-control">
+                                <label class="ml-2">
+                                    {{fields[field].label}}
+                                    <!-- :placeholder is used to dynamically change the placeholder text-->
+                                    <input 
+                                        type="text"
+                                        class="input input-bordered m-2 w-full rounded-xl h-10 placeholder:pl-2"
+                                        v-model="fields[field].value"                                    
+                                        :placeholder="[[fields[field].label]]"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="flex flex-row-reverse gap-2 justify-start mt-5">
+                    <button v-if="!isLastStep" class="bg-purple-500 rounded-xl p-2" @click="nextStep">
+                        <span class="text-white">
+                            Next
+                        </span>
+                    </button>
+                    <button v-if="!isFirstStep" class="border border-black rounded-xl p-2 bg-gray-800" @click.prevent="previousStep">
+                        <span class="text-white">
+                            Previous
+                        </span>
+                    </button>
+                </footer>
+            </form>
+            
+        </div>
+    </body>
+</html>
